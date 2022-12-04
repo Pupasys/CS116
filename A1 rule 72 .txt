@@ -1,0 +1,40 @@
+##
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 1-Rule 72
+## ***************************************************
+
+import math
+import check
+def doubling_time(i):
+  ''' 
+  Calculate the difference between Rule 72's value and
+  The Traditional formula's value.
+  
+  Reqiured: i = float()
+            0 < i < 1
+  Example: doubling_time(0.08) = 0.006468...
+  '''
+  rule_72 = 72/(i*100)
+  absolute_value = math.log(2)/math.log(1+i)
+  return math.fabs(rule_72-absolute_value)
+
+# Sample:
+check.within("Markus Basic Test",
+      doubling_time(0.08),
+      0.0064683420005877681283,0.00001)
+
+# Tests:      
+check.within("Test 1",
+      doubling_time(0.0375),
+      0.3716280052306402,0.00001)
+
+check.within("Test 2",
+      doubling_time(0.99),
+      0.2800115184858478,0.00001)
+
+check.within("Test 3",
+      doubling_time(0.01),
+      2.339283106425171,0.00001)
+      

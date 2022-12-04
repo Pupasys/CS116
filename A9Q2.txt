@@ -1,0 +1,70 @@
+class Stock:
+  ''' 
+  Fields: 
+     symbol (Str), 
+     prices (listof Float)
+  Requires: each value in prices is non-negative.
+  '''
+  def __init__(self, name, init_value):
+    self.symbol = name
+    self.prices = [init_value]
+    
+  def __eq__(self,other):
+    close_prices = list(filter(lambda x: abs(
+        self.prices[x] - other.prices[x]) < 0.000001,
+        range(len(self.prices))))                
+    return (isinstance(other, Stock) and
+            self.symbol == other.symbol and
+            len(self.prices) == len(other.prices) and
+            len(self.prices) == len(close_prices))
+     
+  
+  def __repr__(self):
+    return "Stock: {0}\nCurrent Value: {1}".format(
+              self.symbol, self.prices[-1])
+  
+  def update_prices(self, new_prices):
+    ##YOUR CODE GOES HERE
+    pass
+  
+  def average(self, n):
+    ##YOUR CODE GOES HERE
+    pass
+
+class Trader:
+  '''
+  Fields:  
+     name (Str), 
+     stocks_owned (dictof Str Nat), 
+     init_cash (Float)
+  Requires: 
+    stocks_owned consists of the name of a Stock and 
+      how many shares owned (positive).
+    init_cash is non-negative.
+  '''
+  def __init__(self, name, stocks, init_cash):
+    self.name = name
+    self.stocks_owned = stocks
+    self.cash = init_cash
+      
+  def __eq__(self, other):
+    return (isinstance(other, Trader) and
+            self.name == other.name and
+            abs(self.cash - other.cash) < 0.00001 and
+            self.stocks_owned == other.stocks_owned)
+            
+  
+  def __repr__(self):
+    s = "Trader: {0}\nStocks: {1}\nCurrent Cash Value: {2}"
+    return s.format(self.name, 
+                    list(map(lambda x: x + " Shares: " + \
+                             str(self.stocks_owned[x]),
+                    self.stocks_owned.keys())), self.cash)
+  
+  def buy_stocks(self, s, n):
+    ##YOUR CODE GOES HERE
+    pass
+    
+  def sell_stocks(self, s, n):
+    ##YOUR CODE GOES HERE
+    pass

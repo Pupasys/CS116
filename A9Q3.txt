@@ -1,0 +1,147 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 9- Stock 2
+## ***************************************************
+import check
+class Stock:
+  ''' 
+  Fields: 
+     symbol(Str), 
+     prices(list of Float)
+  Requires: each value in prices is non-negative.
+  '''
+  def __init__(self, name, init_value):
+    self.symbol = name
+    self.prices = [init_value]
+    
+  def __eq__(self,other):
+    return (isinstance(other, Stock) and
+            self.symbol == other.symbol and
+            len(self.prices) == len(other.prices) and
+            len(self.prices) == len(list(filter(
+              lambda x: abs(self.prices[x] - other.prices[x])< 0.000001, 
+              range(len(self.prices))))))
+     
+  
+  def __repr__(self):
+    return "Stock: {0}\nCurrent Value: {1}".format(self.symbol, self.prices[-1])
+
+class Trader:
+  '''
+  Fields:  
+     name(Str), 
+     stocks_owned(dictof Str Nat), 
+     init_cash(Float)
+  Requires: 
+    stocks_owned consists of the name of a Stock and 
+      how many shares owned (positive).
+    init_cash is non-negative.
+  '''
+  def __init__(self, name, stocks, init_cash):
+    self.name = name
+    self.stocks_owned = stocks
+    self.cash = init_cash
+      
+  def __eq__(self, other):
+    return (isinstance(other, Trader) and
+            self.name == other.name and
+            abs(self.cash - other.cash) < 0.00001 and
+            self.stocks_owned == other.stocks_owned)
+            
+  
+  def __repr__(self):
+    s = "Trader: {0}\nStocks: {1}\nCurrent Cash Value: {2}"
+    return s.format(self.name, 
+               list(map(lambda x: x + " Shares: " + str(self.stocks_owned[x]),
+               self.stocks_owned.keys())), self.cash)
+
+def minimal_majority(company, traders):
+  '''
+  minimal_majority consumes company and a list of Traders. 
+  The function then returns a list of trader names in 
+  alphabetical order that comprise a minimum number of 
+  Traders that could form a majority.
+  
+  minimal_majority: (list Stock Nat) (list of Trader) -> (list of Str)
+  
+  Example:
+  apple = Stock("APPL",3.0)
+  microsoft = Stock("MSFT",2.75)
+  warren_buffet = Trader("Warren Buffet", {apple.symbol: 30, microsoft.symbol: 100}, 1000108942.0)
+  tim_cook = Trader("Tim Cook", {apple.symbol: 45}, 1000745563.0)
+  paul_tudor_jones = Trader("Paul Tudor Jones", {apple.symbol: 20}, 1000846080.0)
+  
+  minimal_majority([apple, 140],[warren_buffet, tim_cook, paul_tudor_jones]) 
+       => ["Tim Cook", "Warren Buffet"]
+  '''
+  required = company[1]/2
+  symbol = company[0].symbol
+  def condition(i):
+    if symbol in i.stocks_owned:
+      return i.stocks_owned[symbol]
+    return 0
+  sort = sorted(traders,reverse=True, key = condition)
+  total = 0
+  test = 0
+  majority = []
+  for i in sort:
+    if symbol in i.stocks_owned:
+      test += i.stocks_owned[symbol]
+  print(test)
+  if test < required:
+    return []
+  else:
+    while total < required:
+      for i in sort:
+        if symbol in i.stocks_owned and i not in majority and total < required:
+          total += i.stocks_owned[symbol]
+          majority.append(i.name)
+    
+  majority.sort()
+  return majority
+
+
+# MarkUs Basic Test
+apple = Stock("APPL",3.0)
+microsoft = Stock("MSFT",2.75)
+warren_buffet = Trader("Warren Buffet", 
+                        {apple.symbol: 30, microsoft.symbol: 100},
+                        1000613.0)
+tim_cook = Trader("Tim Cook", 
+                  {apple.symbol: 45}, 
+                  10003926.0)
+paul_tudor_jones = Trader("Paul Tudor Jones", 
+                          {apple.symbol: 20}, 
+                          10004447.0)
+check.expect("MarkUs Basic Test", 
+             minimal_majority([apple, 140],
+                             [warren_buffet, tim_cook, paul_tudor_jones]),
+             ["Tim Cook", "Warren Buffet"])
+             
+#Test
+warren_buffet = Trader("Warren Buffet", 
+                        {apple.symbol: 30, microsoft.symbol: 50},
+                        1000613.0)
+tim_cook = Trader("Tim Cook", 
+                  {apple.symbol: 45}, 
+                  10003926.0)
+paul_tudor_jones = Trader("Paul Tudor Jones", 
+                          {apple.symbol: 20, microsoft.symbol: 100}, 
+                          10004447.0)
+dan = Trader("Dan", 
+                          { microsoft.symbol: 250}, 
+                          10004447.0)
+check.expect("Uncommon stock Test", 
+             minimal_majority([microsoft, 600],
+                             [warren_buffet, tim_cook, paul_tudor_jones, dan]),
+             ["Dan","Paul Tudor Jones"])
+
+check.expect("Monopoly Test", 
+             minimal_majority([microsoft, 480],
+                             [warren_buffet, tim_cook, paul_tudor_jones, dan]),
+             ["Dan"])
+check.expect("Oligopoly Test", 
+             minimal_majority([microsoft, 4800],
+                             [warren_buffet, tim_cook, paul_tudor_jones, dan]),
+             [])

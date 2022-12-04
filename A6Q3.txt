@@ -1,0 +1,56 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 5- Fun in the Sum
+## ***************************************************
+import check
+def fun_in_the_sum(n):
+  '''
+  consumes a natural number n and returns a list of all pairs 
+  of distinct natural numbers a and b that lie between  1  and  
+  n  that is the sum of the first  n  natural numbers after 
+  removing two distinct natural numbers  a  and  b  is equal 
+  to the product of these removed numbers. 
+  
+  fun_in_the_sum: Nat -> list([Nat,Nat])
+  
+  Samples:
+  
+  fun_in_the_sum(10)  => [[6,7],[7,6]]
+  fun_in_the_sum(11)  => []
+  fun_in_the_sum(325) => [[171, 307], [175, 300],
+                          [300, 175], [307, 171]]
+  fun_in_the_sum(862861) => []
+  '''
+  i = 0
+  ans = []
+  for j in range(n+1):
+    i += j
+  for a in range(1,n+1):
+    b1 = ((i-a)//a)
+    b2 = b1 -1  ## accounting for division rounding errors
+    if a*b1 + a + b1 == i:
+      ans.append([a,b1])
+    elif a*b2 + a + b2 == i:
+      ans.append([a,b2])
+  return ans  
+
+#Example
+check.expect("MarkUs Basic Test", 
+            fun_in_the_sum(10), [[6,7],[7,6]])
+check.expect("MarkUs Basic Test", 
+            fun_in_the_sum(11), [])
+check.expect("MarkUs Basic Test", 
+            fun_in_the_sum(325), [[171, 307], [175, 300], [300, 175], [307, 171]])
+check.expect("MarkUs Basic Test", 
+            fun_in_the_sum(862861), [])
+            
+#Test
+check.expect("Zero Test", 
+            fun_in_the_sum(0), [])
+check.expect("addition Test", 
+            fun_in_the_sum(400), [[252, 316], [316, 252]])
+check.expect("small num Test", 
+            fun_in_the_sum(4), [])
+check.expect("negative Test", 
+            fun_in_the_sum(-10), [])

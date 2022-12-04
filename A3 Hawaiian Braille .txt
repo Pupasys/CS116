@@ -1,0 +1,117 @@
+## 
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 3- Hawaiian Braille 
+## 
+
+import math
+import check
+
+def hawaiian_braille(s)
+  ''' 
+  Print the braille chain base on the word s, return 
+  None at the function.
+      
+  hawaiian_braille str - None
+  
+  Require 
+    S should be a Hawaiian word not considering okina
+  
+  Examples
+  hawaiian_braille(hawaiian) = None
+  and the following is printed to the screen
+  ob ob bo ob bo bo ob oo
+  oo bb oo bb ob ob bb bo
+  bb bb bo bb bb bb bb ob
+  '''
+  a = 
+  b = 
+  c = 
+  s = s.lower()
+  return hawaiian_helper (s,a,b,c)
+  
+def hawaiian_helper (s,a,b,c)
+  '''
+  Return None to the main function but print the
+  braille of the word s in lines of a, b, and c.
+  
+  hawaiian_helper - str,str,str,str - None
+  '''
+  if len(s) = 0
+    print (a[-1])
+    print (b[-1])
+    print (c[-1])
+    return None
+  else
+    if s[0] == a
+      a = a + ob 
+      b = b + bb 
+      c = c + bb 
+    elif s [0] == e
+      a = a + ob 
+      b = b + bo 
+      c = c + bb 
+    elif s [0] == h
+      a = a + ob 
+      b = b + oo 
+      c = c + bb 
+    elif s [0] == i
+      a = a + bo 
+      b = b + ob 
+      c = c + bb 
+    elif s [0] == k
+      a = a + ob 
+      b = b + bb 
+      c = c + ob 
+    elif s [0] == l
+      a = a + ob 
+      b = b + ob 
+      c = c + ob 
+    elif s [0] == m
+      a = a + oo 
+      b = b + bb 
+      c = c + ob 
+    elif s [0] == n
+      a = a + oo 
+      b = b + bo 
+      c = c + ob 
+    elif s [0] == o
+      a = a + ob 
+      b = b + bo 
+      c = c + ob 
+    elif s [0] == p
+      a = a + oo 
+      b = b + ob 
+      c = c + ob 
+    elif s [0] == u
+      a = a + ob 
+      b = b + bb 
+      c = c + oo 
+    elif s [0] == w
+      a = a + bo 
+      b = b + oo 
+      c = c + bo 
+    return hawaiian_helper(s[1],a,b,c)
+# Examples
+check.set_print_exact(ob ob bo ob bo bo ob oo,
+                     oo bb oo bb ob ob bb bo,
+                     bb bb bo bb bb bb bb ob)
+check.expect(MarkUs Basic Test, hawaiian_braille(hawaiian), None)
+check.set_print_exact(ob,
+                     oo,
+                     bb)
+check.expect(MarkUs Basic Test, hawaiian_braille('h), None)
+
+# Test
+check.set_print_exact(ob ob ob ob,
+                     oo bo ob bb,
+                     bb ob ob bb)
+check.expect(okina at the end, hawaiian_braille(hola'), None)
+check.set_print_exact(,
+                     ,
+                     )
+check.expect(empty check, hawaiian_braille( ), None)
+check.set_print_exact(ob ob ob ob bo ob bo bo,
+                     oo bb oo bb oo bb ob ob,
+                     bb bb bb bb bo bb bb bb)
+check.expect(cap check, hawaiian_braille(HAHawaii), None)

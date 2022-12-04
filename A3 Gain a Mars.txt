@@ -1,0 +1,65 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 3- Gain a mars
+## ***************************************************
+
+import math
+import check
+
+def is_anagram(s, t):
+  ''' 
+  Returns the boolean True or False on the two consumed 
+  strings S and T, the funtion will return True only if
+  the two strings are anagrams of each other and False 
+  otherwise.
+  
+  s,t: str -> str
+  Requires: s and t to be strings 
+  
+  Examples:
+  is_anagram("meat", "team") => True
+  is_anagram("stay", "says") => False
+  is_anagram("inode", "INODE") => False
+  '''
+  #Firstly, make everything into lower case
+  s = s.lower() 
+  t = t.lower()
+  #If the words are anagram, then the letters cancels
+  #out and return True for the function
+  if s == "" and t == "" :
+    return True
+  elif s == "" or t == "" :
+    return False
+  else :
+    # Make sure the first letter S is inside T, vice versa
+    # if not False it is.
+    if t.count(s[0]) == 0 or s.count(t[0]) == 0 :
+      return False
+    # If the first letter are the same, run the function
+    # again without the first letter for both words.
+    elif s[0] == t[0] :
+      return is_anagram(s[1:],t[1:])
+    else:
+    # If the first letter is not the same, move the
+    # first letter to the end of the word and run again.
+      return is_anagram(s[1:] + s[0],t)
+# Examples:
+check.expect("Q1T0",
+  is_anagram("meat", "team"),True)
+check.expect("Q1T1",
+  is_anagram("stay", "says"),False)
+check.expect("Q1T2",
+  is_anagram("inode", "INODE"),True)
+# Test
+check.expect("length diff",
+  is_anagram("cabs", "abc"),False)
+check.expect("diff words",
+  is_anagram("onione", "onions"),False)
+check.expect("mix caps",
+  is_anagram("indomie", "IndoMie"),True)
+check.expect("With space",
+  is_anagram(" bbaa", "b aba"),True)
+check.expect("With multiple space",
+  is_anagram("cd dc", "d c dc"),False)
+  

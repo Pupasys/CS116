@@ -1,0 +1,110 @@
+import check
+from a10q1 import PPM
+
+def encode_msg(file_name, msg, file_name_out):
+  '''
+  encode_msg consumes a string file_name corresponding to an existing 
+  .ppm file which should be opened using the PPM class methods 
+  and a string msg to be encoded. It then encodes the message 
+  into the picture as described above and saves this image 
+  as a .ppm file with name file_name_out. 
+  
+  encode_msg: str str str-> None
+  
+  Reqiured: PPM format
+  Example:
+  a.ppm contains:
+  P3
+  4 4
+  255
+  255 255 255 255 255 255 255 255 255 255 255 255
+  255 255 255 255 255 255 255 255 255 255 255 255
+  255 255 255 255 255 255 255 255 255 255 255 255
+  255 255 255 255 255 255 255 255 255 255 255 255
+  
+  encode_msg("a.ppm", "a", "b.ppm") => None
+  
+  then after running, b.ppm contains:
+  P3
+  4 4
+  255
+  255 255 254 255 255 255 255 255 255 255 255 254
+  255 255 254 255 255 254 255 255 254 255 255 255
+  255 255 254 255 255 254 255 255 254 255 255 254
+  255 255 254 255 255 254 255 255 254 255 255 254 
+  '''
+  cr = PPM(file_name)
+  ot = open(file_name_out, "w")
+  ot.write(cr.magic_number +"\n")
+  ot.write(str(cr.width) + " "+ str(cr.height) +"\n")
+  ot.write(str(cr.maxval) +"\n")
+  cr.zero_out()
+  bit = ""
+  for s in msg:
+    bit += (format(ord(s), '08b'))
+  def new_entre(i, x):
+    if i % (cr.height*3) == (cr.height*3)-1:## new line
+      return ot.write(str(x) + "\n")
+    else:
+      return ot.write(str(x) + " ")
+  for i in range(0, cr.width*cr.height*3): ## for all pixels
+    if i%3 == 2 and i < len(bit)*3:
+        new_entre(i, cr.image[i]+ int(bit[i//3]))
+    else:
+      new_entre(i, cr.image[i])
+  ot.close()
+  return None
+
+##Examples and tests under decode_msg.
+
+def decode_msg(file_name):
+  '''
+  decode_msg consumes a .ppm file in the string file_name that 
+  was encoded using the algorithm above, it then decodes the 
+  hidden message and returns this string.
+  
+  decode_msg: str -> str
+  
+  Reqiured: PPM format
+  Example:
+  c.ppm contains:
+  P3
+  4 4
+  255
+  255 255 254 255 255 255 255 255 255 255 255 254
+  255 255 254 255 255 254 255 255 254 255 255 255
+  255 255 254 255 255 254 255 255 254 255 255 254
+  255 255 254 255 255 254 255 255 254 255 255 254
+  
+  decode_msg("c.ppm") => "a"
+  '''
+  cr = PPM(file_name)
+  bit = ""
+  ans = ""
+  for i in range(2,cr.width*cr.height*3,3): ## for all pixels
+    if cr.image[i]%2 == 0:
+      bit += "0"
+    else:
+      bit += "1"
+  for i in range(0, len(bit)-7, 8):
+    if bit[i:i+8] == "00000000":
+      ans += ""
+    else:
+      ans += chr(int(bit[i:i+8],2))
+  return ans
+
+##Examples
+check.set_file_exact("b.ppm", "b_expected.ppm")  
+check.expect("MarkUs Basic Test encode", encode_msg("a.ppm", "a", "b.ppm"), None)
+
+check.expect("MarkUs Basic Test decode", decode_msg("c.ppm"), "a")
+
+##Test
+check.expect("Space Test encode", encode_msg("computer.ppm", "All nighter is fun", "s.ppm"), None)
+check.expect("Space Test decode", decode_msg("s.ppm"), "All nighter is fun")
+
+check.expect("symbol Test encode", encode_msg("flower.ppm", "!@#$%^&*()_+", "t.ppm"), None)
+check.expect("symbol Test decode", decode_msg("t.ppm"), "!@#$%^&*()_+")
+
+check.expect("Number Test encode", encode_msg("cs116.ppm", "0123456789", "u.ppm"), None)
+check.expect("NUmber Test decode", decode_msg("u.ppm"), "0123456789")

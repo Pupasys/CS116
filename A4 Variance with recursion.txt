@@ -1,0 +1,43 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 4- Variance with Abstract List Functions
+## ***************************************************
+import check
+import math
+
+def variance(L):
+  ''' 
+  Reads in the list L and return the squared difference 
+  of each term from the mean, then adding these values 
+  to divide by the total number of elements.
+  
+  L => non-empty
+  variance: list(floats) -> float  
+  
+  Examples:
+  variance([108963.0]) => 0.0
+  variance([1.0, 2.0, 3.0, 4.0, 5.0]) => 2.0
+  '''
+  x = sum(L) / len(L)
+  m = helpp(x, L)
+  return sum(m) / len(m)
+
+def helpp(x, L):
+  return list(map(lambda i: (i - x)**2, L))
+
+#Samples 
+check.within("MarkUs Basic Test", variance([1401.0]), 0.0, 0.00001)
+check.within("MarkUs Basic Test", variance([108963.0]), 0.0, 0.00001)
+check.within("MarkUs Basic Test", 
+variance([1.0, 2.0, 3.0, 4.0, 5.0]), 2.0, 0.00001)
+
+#Test
+check.within("More var Test", 
+variance([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]), 2.916666666, 0.00001)
+check.within("Decimal Test", 
+variance([1.5, 2.4, 3.0, 4.0, 5.0]), 1.4896, 0.00001)
+check.within("negative Test", 
+variance([-1.0, 2.0, -3.0, 4.0, 5.5]), 9.8, 0.00001)
+check.within(" zero Test", 
+variance([0.0,0.0]), 0.0, 0.00001)

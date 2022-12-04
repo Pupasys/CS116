@@ -1,0 +1,80 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 8- galloping_search
+## ***************************************************
+import check
+
+gallop_msg = 'Galloping search from index {0}'
+bin_msg = 'Binary search from index {0} to {1}'
+
+def galloping_search(L, target):
+  '''
+   consumes a non-empty sorted list of distinct integers 
+   and an integer target and then performs galloping search 
+   on the list.
+  
+  Effects: search for target in L
+  
+  sort_list: (listof Int) -> int
+  Requires: None
+
+  Examples: 
+  galloping_search([1, 2, 5, 7, 9, 14, 15, 23, 594780], 14) => 5
+  and the following is printed to the screen:
+  
+  Galloping search from index 0
+  Galloping search from index 1
+  Galloping search from index 3
+  Galloping search from index 7
+  Binary search from index 4 to 6
+  galloping_search([1, 2, 5, 7, 9], 7) => 3
+  '''
+  ##YOUR CODE GOES HERE
+  index = 0
+  i = 0
+  def binary_search(L, target):
+    beginning = 0
+    end = len(L)
+    while beginning < end:
+      mid = (beginning + end)//2
+      if L[mid] == target:
+        return mid
+      elif L[mid] > target :
+        end = mid
+      else:
+        beginning = mid + 1
+    return False
+  while index <= len(L):
+    if target == L[index]:
+      return index
+    elif i >= len(L):
+      break
+    elif L[index] >= target:
+      start = 2**(i-2)
+      print(bin_msg.format( start,index-1))
+      if binary_search(L[start:index],target) == False:
+        return False
+      else:
+        return start + binary_search(L[start:index],target)
+    elif target > L[index]:
+
+      index = (2** i)-1 
+      i += 1
+      print (gallop_msg.format(index))
+  return False
+
+#Example
+check.expect('MarkUs Basic Test', 
+    galloping_search([1, 2, 5, 7, 9, 14, 15, 23, 594780], 14), 5)
+check.set_print_exact(gallop_msg.format(0))
+check.expect('MarkUs Basic Test', galloping_search([1], 3), False)
+
+#test
+check.expect('MarkUs Basic Test', 
+    galloping_search([1, 2, 5, 7, 9], 3), False)
+check.expect('MarkUs Basic Test', 
+    galloping_search([1, 2, 5, 7, 9], 7), 3)
+
+check.expect('MarkUs Basic Test', 
+    galloping_search([1, 2, 3, 4, 5, 6, 7, 8, 100, 105], 100), 9)

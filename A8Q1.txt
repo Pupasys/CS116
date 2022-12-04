@@ -1,0 +1,40 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 8- No Doubles
+## ***************************************************
+import check
+def no_doubles(L):  
+  '''
+  Mutate all L doubles into -1
+  
+  Effects: Mutates L
+  
+  sort_list: (listof Int) -> None
+  Requires: None
+
+  Examples: 
+     L = [1, 2, 1, 2, 2, 293211]
+     no_doubles(L) => None
+     and mutate L to [-1, 2, -1, 2, 2, 293211]
+  '''
+  M = sorted(L)
+  for i in range(len(M)):
+    if M.count(i) == 2:
+      for j in range(len(L)):
+        if M[i] == L[j]:
+          L[j] = -1
+  return None
+
+#Example
+L = [3621,1, 2, 1, 2, 2 ]
+check.expect("MarkUs Basic Test", no_doubles(L), None)
+check.expect("MarkUs Basic Test Mutation", L, [3621,-1, 2, -1, 2, 2])
+
+#Test
+L = []
+check.expect("Empty list", no_doubles(L), None)
+check.expect("MarkUs Basic Test Mutation", L, [])
+L = [1,400, 1, 2, 2 ]
+check.expect("More than one pair", no_doubles(L), None)
+check.expect("MarkUs Basic Test Mutation", L, [-1, 400, -1, -1, -1])

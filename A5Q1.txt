@@ -1,0 +1,93 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 5- Max Consonant Run
+## ***************************************************
+import check
+import math
+def max_consonant_run(L):
+  '''
+  Returns the the consonant run of the length of the 
+  largest substring that does not contain the vowel 
+  characters 'a','e','i','o','u'. 
+  
+  L: (listof Str) -> (listof Str)
+  
+  Sample
+  max_consonant_run(["watchstrap","monkey","banana", "cookies"
+  ,"mmmmmmore", "clout"]) => ["watchstrap","mmmmmmore"]
+   
+  max_consonant_run(["xyz","ccc","civility", "abracadabra"]) 
+  => ["xyz","ccc"]
+  '''
+  return consonant_run(L,len(L)-1,max_consonant(L, 0))
+  
+def consonant_run(L, i, m):
+  '''
+  Returns the the consonant run and pick out the strings with the 
+  highest consonant.
+  
+  L: (listof Str), int, int -> (listof Str)
+  
+  Sample
+  consonant_run(["watchstrap","monkey","banana", "cookies"
+  ,"mmmmmmore", "clout"] ,5 ,6) => ["watchstrap","mmmmmmore"]
+   
+  consonant_run(["xyz","ccc","civility", "abracadabra"],3,3) 
+  => ["xyz","ccc"]
+  '''
+  if i >= 0:
+    if count(L[i],0,0) >= m:
+      return consonant_run(L, i-1, m)
+    else:
+      return consonant_run(L[:i] + L[i+1 :], i -1, m)
+  else:
+    return L
+
+def max_consonant(L, c):
+  '''
+  Returns the the highest consonant in a list of strings.
+  
+  L: (listof Str), int -> int
+  
+  Sample
+  max_consonant(["watchstrap","monkey","banana", "cookies"
+  ,"mmmmmmore", "clout"] ,0) => 6
+   
+  max_consonant(["xyz","ccc","civility", "abracadabra"],0) 
+  => 3
+  '''
+  if L != []:
+    return max_consonant(L[1:],max(count(L[0], 0,0),c))
+  else:
+    return c
+    
+def count(s, char,consonant):
+  '''
+  Returns the the number of consonant in a strings.
+  
+  Str, int, int -> int
+  
+  Sample
+  count("watchstrap",0,0) => 6
+  count("xyz",0,0) => 3
+  '''
+  if s == "" :
+    return max(char,consonant)
+  else: 
+    if s[0] == "a" or s[0] == "e" or s[0] == "i" or s[0] == "o" or s[0] == "u":
+      return count(s[1:], max(char,consonant), 0)
+    else:
+      return count(s[1:], char, consonant + 1)
+
+# Examples
+check.expect("Ex1", max_consonant_run(["watchstrap","monkey","banana",
+            "cookies","mmmmmmore"]), ["watchstrap","mmmmmmore"])
+            
+check.expect("Ex2",max_consonant_run(["xyz","ccc","civility", 
+            "abracadabra"]), ["xyz","ccc"])
+            
+# Test 
+check.expect("empty list",max_consonant_run([""]), [""])
+check.expect("one vowel",max_consonant_run(["babbbb"]), ["babbbb"])
+check.expect("All vowel",max_consonant_run(["aeiou"]), ["aeiou"])

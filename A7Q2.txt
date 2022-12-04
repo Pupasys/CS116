@@ -1,0 +1,43 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 7- Fraud Detection
+## ***************************************************
+import check
+def fraud_detection(transactions, k):
+  '''
+  fraud_detection consumes a list of floating point 
+  transactions and a positive integer k and returns 
+  the total number of fraudulent incidents. 
+  Samples:
+  fraud_detection([360226.12], 1) => 0
+  fraud_detection([123.4, 23.4], 10) => 0
+  fraud_detection([10.0, 20.0, 30.0, 70.0, 21.0], 3) => 1
+  '''
+  def helper(tran, i, count):
+    for x in tran:
+      if i >= 3:
+        if (tran[i-3]+tran[i-2]+tran[i-1])/3 > tran[i]:
+          count += 1
+        i += 1
+      else:
+        i += 1
+    return count
+  return helper(transactions, 0, 0)
+
+
+# Sample
+check.expect("Sample 1", 
+             fraud_detection([360226.12], 1), 0)
+check.expect("Sample 2", 
+             fraud_detection([123.4, 23.4], 10), 0)
+check.expect("Sample 3", 
+             fraud_detection([10.0, 20.0, 30.0, 70.0, 21.0], 3), 1)
+# Test
+check.expect("multiple fraud", 
+             fraud_detection([300.5,200.4,500.7,100.2,50.9,10.3], 1), 3)
+check.expect("fraction under 1", 
+             fraud_detection([0,0,1,0], 10), 1)
+check.expect("zer0 test", 
+             fraud_detection([0.0, 0.0, 0.0, 0.0], 3), 0)
+

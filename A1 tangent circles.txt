@@ -1,0 +1,52 @@
+##
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 1-Tangent Circles
+## ***************************************************
+
+import math
+import check
+def outer_radius(r, n):
+  ''' 
+  Calculate the radius of surrounding circles given 
+  r : radius of the orginal circle
+  n : the number of surrounding circles
+  
+  r : float -> float
+  n : int -> int
+  n => 3
+            
+  Example: 
+  outer_radius(343485.0, 6) => 343485.0
+  outer_radius(2.0, 4) => 4.828427124746189
+  '''
+  x = math.cos(math.radians((180*(n-2))/(n*2)))
+  # x is the cos() of theta
+  s = r*x / -(x -1)
+  # s is the radius of the surrounding circles
+  
+  return s
+
+# Sample:
+check.within("MarkUs Basic Test", 
+             outer_radius(343485.0, 6),
+             343485.0, 0.00001)
+check.within("MarkUs Basic Test", 
+             outer_radius(2.0, 4),
+             4.828427124746189, 0.00001)
+
+# Test:
+check.within("Huge outer circles", 
+             outer_radius(3.0, 3),
+             19.392304845413275 , 0.00001)
+check.within("Large # of circles", 
+             outer_radius(6.0, 20),
+             1.1126661193977645 , 0.00001)
+check.within("Testing random", 
+             outer_radius(3245.0, 543),
+             18.883490221421336, 0.00001)
+
+
+
+      

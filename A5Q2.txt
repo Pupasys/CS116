@@ -1,0 +1,59 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 5- Slime Number
+## ***************************************************
+import check
+import math
+
+def is_slime(n):
+  '''
+  Returns a natural number if the number n is a slime number or not. 
+  
+  n: int -> bool
+  
+  Sample
+  is_slime(70137) => True
+  is_slime(5948564) => False
+  '''
+  if is_prime(n) == True:
+    return True
+  elif is_prime(int(str(n)[:1])) == True and is_prime(int(str(n)[1:])) == True:
+    return True
+  else:
+    return False
+  
+def is_prime(n):
+  '''
+  Returns a bool of if the number n is a prime number or not. 
+  
+  n: int -> bool
+  '''
+  if n >= 1 :
+    return prime_help(2,n)
+  else:
+    return False
+  
+def prime_help(i,n):
+  '''
+  Returns a bool of if the number n is or isn't a factor. 
+  
+  i, n: int -> bool
+  require: i >=2
+  '''
+  if i**i > n:
+    return True
+  elif (n % i) == 0:
+    return False
+  else :
+    return prime_help(i+1,n)
+    
+
+check.expect("MarkUs Basic Test", is_slime(70137), True)
+check.expect("MarkUs Basic Test", is_slime(5948564), False)
+
+#test
+check.expect("High digits", is_slime(77031737), True)
+check.expect("single digit", is_slime(8), False)
+check.expect("zero", is_slime(0), False)
+check.expect("1", is_slime(1), True)

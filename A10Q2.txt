@@ -1,0 +1,127 @@
+import check
+from a10q1 import PPM
+
+def encode_img(file_name, file_name_secret, file_name_out):
+  '''
+  encode_img consumes three file names as strings; 
+  file_name (any picture)
+  file_name_secret (your black and white image you wish to hide) 
+  file_name_out (a destination file name)
+  This function encode the secret image in the original image file and 
+  then create a .ppm file at the destination given by file_name_out 
+  in the proper format as described.
+  
+  encode_img: str str str -> None
+  
+  Reqiured: PPM format, height = width
+  Example:
+  a.ppm contains:
+  P3
+  1 1
+  255
+  255 255 234
+  
+  b.ppm contains:
+  P3
+  1 1
+  255
+  255 255 255
+  
+  encode_img("a.ppm", "b.ppm", "c.ppm") => None
+    
+  then after running, c.ppm contains:
+  P3
+  1 1
+  255
+  255 255 235
+  
+  '''
+  cr = PPM(file_name)
+  bw = PPM(file_name_secret)
+  ot = open(file_name_out, "w")
+  ot.write(cr.magic_number +"\n")
+  ot.write(str(cr.width) + " "+ str(cr.height) +"\n")
+  ot.write(str(cr.maxval) +"\n")
+  cr.zero_out()
+  def new_entre(i, x):
+    if i % (cr.height*3) == (cr.height*3)-1:## new line
+      return ot.write(str(x) + "\n")
+    else:
+      return ot.write(str(x) + " ")
+  for i in range((cr.width*cr.height*3)): ## for all pixels
+    if i%3 == 2 and bw.image[i] == bw.maxval: 
+      new_entre(i, cr.image[i]+1)
+    else:
+      new_entre(i, cr.image[i])
+  ot.close()
+  return None
+
+##Examples and tests under decode_img.
+
+def decode_img(file_name, file_name_out):
+  '''
+  decode_img consumes a .ppm file name in the string file_name 
+  that was encoded using encode_img above, load this file using 
+  the PPM class, decodes the secret black and white image and 
+  saves it to the .ppm file with file name as specified by the 
+  string file_name_out.
+  
+  decode_img: str str -> None
+  
+  Reqiured: PPM format, height = width
+  Example:
+  d.ppm contains:
+  P3
+  1 1
+  255
+  123 54 235  
+  
+  decode_img("d.ppm", "e.ppm") => None
+    
+  then after running, e.ppm contains:
+  P3
+  1 1
+  255
+  255 255 255  
+
+  '''
+  cr = PPM(file_name)
+  ot = open(file_name_out, "w")
+  ot.write(cr.magic_number +"\n")
+  ot.write(str(cr.width) + " "+ str(cr.height) +"\n")
+  ot.write(str(cr.maxval) +"\n")
+
+  def new_entre(i, x):
+    if i % (cr.height*3) == (cr.height*3)-1:## new line
+      return ot.write(str(x) + "\n")
+    else:
+      return ot.write(str(x) + " ")
+  for i in range((cr.width*cr.height*3)): ## for all pixels
+    if i%3 == 2:
+      if cr.image[i]%2 == 1:
+        new_entre(i-2, cr.maxval)
+        new_entre(i-1, cr.maxval)
+        new_entre(i, cr.maxval)
+      else:
+        new_entre(i-2, 0)
+        new_entre(i-1, 0)
+        new_entre(i, 0)
+  ot.close()
+  return None
+  
+##examples:
+check.set_file_exact("c.ppm", "c_expected.ppm") 
+check.expect("MarkUs Basic Test encode", encode_img("a.ppm", "b.ppm", "c.ppm"), None)
+check.set_file_exact("e.ppm", "e_expected.ppm") 
+check.expect("MarkUs Basic Test decode", decode_img("d.ppm", "e.ppm"), None)
+
+##Test 
+check.expect("computer basic test", encode_img("flower.ppm", "computer.ppm", "secret.ppm"), None)
+check.expect("MarkUs Basic Test decode", decode_img("secret.ppm", "output.ppm"), None)
+check.set_file_exact("output.ppm", "computer.ppm")  
+
+check.expect("flower basic test", encode_img("cs116.ppm", "flower.ppm", "secrett.ppm"), None)
+check.expect("MarkUs Basic Test encode", decode_img("secrett.ppm", "outputt.ppm"), None)
+check.set_file_exact("outputt.ppm", "flower.ppm") 
+
+

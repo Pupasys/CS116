@@ -1,0 +1,84 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 3- Plane Walking 
+## ***************************************************
+
+import math
+import check
+num_prompt = "Enter a number of directions to be entered: "
+dir_prompt = "Enter a direction (N, E, W, S): "
+final_answer = "The distance from the origin is {0:0.3f} units."
+
+def distance_from_origin():
+  ''' 
+  Reads in "n" then "direction" inputs from keyboard,
+  and return the distance between the starting 
+  position to the ending position.
+  Effects: 
+     N values are read in and 
+     One float is printed
+      
+  distance_from_origin: None -> float  
+  
+  Examples:
+    distance_from_origin() => 2.236
+    if the user enters 5, N, N, S, E, E
+  '''
+  n = int(input(num_prompt))
+  dx = 0 
+  dy = 0
+  return distance_helper(n,dx,dy)
+  
+def distance_helper(n,dx,dy):
+  ''' 
+  Reads in direction inputs from the keyboard,
+  and prints out the distance between the starting 
+  position to the ending position.
+  Effects: 
+     direction values are read in and 
+     One float is printed
+      
+  distance_helper(n,dx,dy): None -> float  
+  
+  Examples:
+    distance_helper(3,2,-1) => 4.0
+    if the user enters N, N, E
+  '''
+  if n <= 0:
+    d = math.sqrt((dx**2) + (dy**2))
+    print (final_answer.format(d))
+    return d
+  else:
+    dirction = str(input(dir_prompt))
+    if dirction == "N":
+      return distance_helper(n-1,dx,dy+1)
+    elif dirction == "S":
+      return distance_helper(n-1,dx,dy-1)
+    elif dirction == "E":
+      return distance_helper(n-1,dx+1,dy)
+    elif dirction == "W":
+      return distance_helper(n-1,dx-1,dy)
+
+# Examples:
+check.set_input('5','N','N','S','E','E')
+check.set_print_exact(final_answer.format(2.236))
+check.within("Q2T0", 
+             distance_from_origin(), 
+             2.236066797749979, 0.00001)
+# Test
+check.set_input('6','W','W','N','E','N','W')
+check.set_print_exact(final_answer.format(2.828))
+check.within("negative x asis", 
+             distance_from_origin(), 
+             2.8284271247461903, 0.00001)
+check.set_input('5','S','S','W','N','W')
+check.set_print_exact(final_answer.format(2.236))
+check.within("negative x and y asis", 
+             distance_from_origin(), 
+             2.236066797749979, 0.00001)
+check.set_input('0')
+check.set_print_exact(final_answer.format(0.0))
+check.within("do not move", 
+             distance_from_origin(), 
+             0.0, 0.00001)

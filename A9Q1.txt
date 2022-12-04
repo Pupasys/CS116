@@ -1,0 +1,60 @@
+## ***************************************************
+## Billie Chow (20658429)
+## CS 116 Fall 2022
+## Assignment 9 - Voting
+## ***************************************************
+import check
+def election_winner(R):
+  ##YOUR CODE GOES HERE
+  '''
+  A District is a non-empty (dictof Str Nat) which is a 
+  dictionary mapping a candidate's name to the number of 
+  votes the candidate obtained.
+  A Region is a non-empty (listof District) where the keys
+  of the Districts in the list are the same.
+  Consumes A Region non-empty (listof District) with  
+  A District of a non-empty (dictof Str Nat) which is a 
+  dictionary to map a candidate's name to the number of 
+  votes the candidate obtained. Thus returning the winner 
+  of the whole Region.
+  
+  (listof District)(dictof Str Nat) -> Str
+  
+  Examples:
+  district1 = {'Kirby':100, 'Luigi':75, 'Mario':125}
+  district2 = {'Luigi':200, 'Kirby':125, 'Mario':125}
+  election_winner([district1, district2]) => 'Luigi'
+  '''
+  total = {}
+  for district in R:
+    for candidate in district:
+      if candidate in total:
+        total[candidate]+= district[candidate]
+      else:
+        total[candidate] = district[candidate]
+  winner = ""
+  for candidate in total:
+    if winner == "":
+      winner = candidate
+    elif total[candidate] > total[winner]:
+      winner = candidate
+  return winner
+  
+  
+# MarkUs Basic Test
+check.expect("MarkUs Basic Test", 
+             election_winner([{'Kirby':100, 'Luigi':75, 'Mario':125},
+                              {'Luigi':200, 'Kirby':125, 'Mario':125}]),
+                              'Luigi')
+                              
+#Test
+check.expect("Different # of candiate between region Test", 
+             election_winner([{'Kirby':100,'Carmen':400, 'Luigi':75, 'Mario':125},
+                              {'Luigi':200, 'Kirby':125, 'Mario':125}]),
+                              'Carmen')
+check.expect("Small vote Test", 
+             election_winner([{'Kirby':0, 'Luigi':0, 'Mario':0},
+                              {'Luigi':0, 'Kirby':0, 'Mario':1}]),
+                              'Mario')
+                              
+                              
